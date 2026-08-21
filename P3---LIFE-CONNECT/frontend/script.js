@@ -157,7 +157,7 @@ const MOCK_DATA = {
       movies:   ['Karz', 'Kranti', 'Qurbani', 'Dostana'],
       cricket:  ['Kapil Dev\'s rise', 'Sunil Gavaskar\'s 10000 runs', 'India tours England', 'Young Mohinder Amarnath'],
       events:   ['Indira Gandhi returns to power', 'Olympic boycott', 'Punjab unrest begins', 'India\'s first satellite Rohini'],
-      tv:       ['Doordarshan begins colour', 'Hum Log serial begins', 'Buniyaad serial', 'Krishi Darshan'],
+      tv:       ['Doordarshan begins colour', 'Hum Log serial begins', 'Buniyaad serial',i Darshan'],
       magazines:['Indrajaal Comics', 'Chandamama', 'Nandan', 'Bal Bharati'],
     },
     1985: {
