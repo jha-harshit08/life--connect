@@ -114,7 +114,8 @@
       Document Help
     </button>
     <div style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px;">
-      <button class="btn btn-primary btn-block mb-3" onclick="navigate('signup')">Get Started Free</button>
+      <button id="mobile-menu-get-started" class="btn btn-primary btn-block mb-3" onclick="navigate('signup')">Get
+        Started Free</button>
       <button class="btn btn-secondary btn-block" onclick="navigate('login')">Login</button>
     </div>
   </div>
@@ -611,7 +612,7 @@
             </div>
             <div>
               <div class="footer-col__title">Account</div>
-              <a class="footer-col__link" onclick="navigate('signup')">Get Started</a>
+              <a id="footer-get-started" class="footer-col__link" onclick="navigate('signup')">Get Started</a>
               <a class="footer-col__link" onclick="navigate('login')">Login</a>
               <a class="footer-col__link" onclick="navigate('profile')">Profile</a>
               <a class="footer-col__link" onclick="navigate('legal')">Document Help</a>
@@ -1079,16 +1080,17 @@
         <div class="container">
           <div
             style="background:var(--white);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-md);margin-bottom:32px;">
-            <div id="wellness-progress"
+            <div id="wellness-progress-wellness"
               style="font-size:var(--text-md);font-weight:600;color:var(--text-dark);margin-bottom:12px;">0 of 9
               activities completed today</div>
             <div style="background:var(--border);border-radius:var(--radius-full);height:10px;">
-              <div id="wellness-bar"
+              <div id="wellness-bar-wellness"
                 style="background:var(--green-deep);height:100%;border-radius:var(--radius-full);width:0%;transition:width .4s ease;">
               </div>
             </div>
           </div>
-          <div class="activity-grid" id="activity-grid" role="list" aria-label="Today's wellness activities"></div>
+          <div class="activity-grid" id="activity-grid-wellness" role="list" aria-label="Today's wellness activities">
+          </div>
           <div style="margin-top:32px;padding:20px;background:var(--orange-light);border-radius:var(--radius-md);">
             <p style="font-size:var(--text-base);color:var(--text-dark);">
               <strong>Important:</strong> These activities are for general wellness enjoyment. Always consult your

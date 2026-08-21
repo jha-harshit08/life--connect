@@ -507,6 +507,71 @@ function updateNavForAuth() {
   // Show/hide dashboard nav link
   const dashLink = document.getElementById('nav-dashboard-link');
   if (dashLink) dashLink.style.display = loggedIn ? 'inline-block' : 'none';
+
+  // Update home-page CTAs to reflect auth state
+  updateHomeCTAsForAuth();
+}
+
+/**
+ * Rewires every "Get Started" / signup CTA on the landing page to point
+ * to the authenticated dashboard when the user is already logged in.
+ *
+ * Buttons/links targeted (by id or selector):
+ *   #hero-get-started       — Hero section primary CTA
+ *   #cta-start              — Bottom "Start Your LifeConnect Journey" CTA
+ *   #mobile-menu-get-started — Mobile menu "Get Started Free" button
+ *   #footer-get-started     — Footer Account column "Get Started" link
+ */
+function updateHomeCTAsForAuth() {
+  const loggedIn = isLoggedIn();
+
+  // Hero CTA
+  const heroCta = document.getElementById('hero-get-started');
+  if (heroCta) {
+    if (loggedIn) {
+      heroCta.textContent = 'Go to My Home';
+      heroCta.onclick = () => navigate('dashboard');
+    } else {
+      heroCta.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Get Started`;
+      heroCta.onclick = () => navigate('signup');
+    }
+  }
+
+  // Bottom CTA banner
+  const ctaStart = document.getElementById('cta-start');
+  if (ctaStart) {
+    if (loggedIn) {
+      ctaStart.textContent = 'Go to My Home';
+      ctaStart.onclick = () => navigate('dashboard');
+    } else {
+      ctaStart.textContent = 'Start Your LifeConnect Journey';
+      ctaStart.onclick = () => navigate('signup');
+    }
+  }
+
+  // Mobile menu "Get Started Free"
+  const mobileGetStarted = document.getElementById('mobile-menu-get-started');
+  if (mobileGetStarted) {
+    if (loggedIn) {
+      mobileGetStarted.textContent = 'My Home';
+      mobileGetStarted.onclick = () => navigate('dashboard');
+    } else {
+      mobileGetStarted.textContent = 'Get Started Free';
+      mobileGetStarted.onclick = () => navigate('signup');
+    }
+  }
+
+  // Footer "Get Started" link
+  const footerGetStarted = document.getElementById('footer-get-started');
+  if (footerGetStarted) {
+    if (loggedIn) {
+      footerGetStarted.textContent = 'My Home';
+      footerGetStarted.onclick = () => navigate('dashboard');
+    } else {
+      footerGetStarted.textContent = 'Get Started';
+      footerGetStarted.onclick = () => navigate('signup');
+    }
+  }
 }
 
 // ----------------------------------------------------------------
@@ -970,17 +1035,29 @@ function getTodayKey() {
 }
 
 function renderWellness() {
-  const grid = document.getElementById('activity-grid');
+  const grid = document.getElementById('activity-grid-wellness');
   if (!grid) return;
   const completed = wellnessState.filter(a => a.completed).length;
   const total = wellnessState.length;
-  const progress = document.getElementById('wellness-progress');
+
+  // Update the Wellness page's own progress elements
+  const progress = document.getElementById('wellness-progress-wellness');
   if (progress) {
     progress.textContent = `${completed} of ${total} activities completed today`;
-    document.getElementById('wellness-bar').style.width = `${(completed/total)*100}%`;
   }
+  const bar = document.getElementById('wellness-bar-wellness');
+  if (bar) {
+    bar.style.width = `${(completed / total) * 100}%`;
+  }
+
+  // Also keep the Dashboard mini-wellness widget in sync (separate IDs)
+  const dashProgress = document.getElementById('wellness-progress');
+  if (dashProgress) dashProgress.textContent = `${completed} of ${total} activities completed today`;
+  const dashBar = document.getElementById('wellness-bar');
+  if (dashBar) dashBar.style.width = `${(completed / total) * 100}%`;
+
   grid.innerHTML = wellnessState.map(a => `
-    <div class="activity-card ${a.completed ? 'completed' : ''}" onclick="toggleActivity(${a.id})">
+    <div class="activity-card ${a.completed ? 'completed' : ''}" onclick="toggleActivity(${a.id})" role="listitem" tabindex="0" aria-label="${a.title} — ${a.completed ? 'completed' : 'tap to complete'}">
       <div class="activity-card__check">${a.completed ? '✓' : ''}</div>
       <span class="activity-card__icon">${a.icon}</span>
       <div class="activity-card__title">${a.title}</div>
