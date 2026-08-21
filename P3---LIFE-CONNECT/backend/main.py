@@ -1,32 +1,78 @@
 """
-LifeConnect - Main Application Entry Point
-Run with: python main.py
+LifeConnect — FastAPI Application Entry Point
+Run with: uvicorn main:app --reload  (from the backend/ directory)
+Or:       python main.py
 """
 
 import os
-from flask import Flask, send_from_directory
+from contextlib import asynccontextmanager
+from pathlib import Path
 
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-
-@app.route("/")
-def index():
-    """Serve the frontend application."""
-    return send_from_directory(app.static_folder, "index.html")
-
-
-@app.route("/<path:path>")
-def static_files(path):
-    """Serve static files or fall back to index.html for SPA routing."""
-    full_path = os.path.join(app.static_folder, path)
-    if os.path.exists(full_path):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, "index.html")
+from database import init_db
+from routes import router
 
 
+# ── Lifespan (startup/shutdown) ────────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize DB on startup."""
+    init_db()
+    print("[LifeConnect] Server is ready at http://localhost:8000")
+    print("[LifeConnect] API docs at http://localhost:8000/api/docs")
+    yield
+    # shutdown logic can go here if needed
+
+
+# ── App setup ──────────────────────────────────────────────────────────────────
+app = FastAPI(
+    title="LifeConnect API",
+    description="Backend API for LifeConnect — AI-powered life companion for people 50+",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    lifespan=lifespan,
+)
+
+# ── CORS ───────────────────────────────────────────────────────────────────────
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          # tighten in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ── Register API routes ────────────────────────────────────────────────────────
+app.include_router(router)
+
+# ── Serve frontend static files ────────────────────────────────────────────────
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
+
+if FRONTEND_DIR.exists():
+    # Serve static assets (CSS, JS) under /static
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
+
+    @app.get("/", include_in_schema=False)
+    def serve_index():
+        """Serve the SPA index.html at the root."""
+        return FileResponse(str(FRONTEND_DIR / "index.html"))
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def serve_spa(full_path: str):
+        """Fall back to index.html for all SPA routes."""
+        requested = FRONTEND_DIR / full_path
+        if requested.exists() and requested.is_file():
+            return FileResponse(str(requested))
+        return FileResponse(str(FRONTEND_DIR / "index.html"))
+
+
+# ── Dev entry point ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    debug = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
-    print(f"[LifeConnect] Server starting on http://localhost:{port}")
-    app.run(host="0.0.0.0", port=port, debug=debug)
-
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
