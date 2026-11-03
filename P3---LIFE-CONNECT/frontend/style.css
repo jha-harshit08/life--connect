@@ -471,3 +471,290 @@ select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3
   .auth-left{display:none;}
   .auth-right{padding:32px 24px;}
 }
+
+/* ================================================================ NOSTALGIC STICKERS */
+.hero-sticker {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 3px solid #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 24px rgba(38, 49, 38, 0.16), 0 3px 8px rgba(0, 0, 0, 0.08);
+  z-index: 15;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.hero-sticker:hover {
+  transform: translateY(-8px) scale(1.08) rotate(0deg) !important;
+  box-shadow: 0 16px 36px rgba(244, 123, 32, 0.28), 0 6px 16px rgba(0, 0, 0, 0.12);
+  z-index: 25;
+}
+.hero-sticker__icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.hero-sticker__text strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.hero-sticker__text span {
+  display: block;
+  font-size: 11px;
+  color: var(--orange-dark);
+  font-weight: 600;
+}
+
+.hero-sticker-cassette {
+  top: -18px;
+  right: -20px;
+  background: linear-gradient(135deg, #FFFFFF, #FFF3E0);
+}
+.hero-sticker-polaroid {
+  bottom: 48px;
+  left: -24px;
+  background: #FFFFFF;
+}
+.hero-sticker-stamp {
+  top: 24px;
+  left: -18px;
+  background: linear-gradient(135deg, #E3F2FD, #FFFFFF);
+  border: 2px dashed #90CAF9;
+}
+
+@keyframes stickerFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-7px) rotate(calc(var(--rot, 0deg) + 2deg)); }
+}
+
+.floating-sticker {
+  animation: stickerFloat 4s ease-in-out infinite;
+}
+
+/* Nostalgic Sticker Album Section */
+.sticker-album-section {
+  background: linear-gradient(180deg, var(--white) 0%, #FFF8EE 40%, var(--cream) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.sticker-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.sticker-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.sticker-action-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.sticker-board {
+  position: relative;
+  min-height: 520px;
+  background: #F5ECD7;
+  background-image: 
+    radial-gradient(#D3C4A2 1.8px, transparent 1.8px),
+    radial-gradient(#D3C4A2 1.8px, #F5ECD7 1.8px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  border-radius: var(--radius-xl);
+  border: 10px solid #E5D7B7;
+  box-shadow: inset 0 6px 20px rgba(64, 92, 50, 0.08), var(--shadow-xl);
+  padding: 44px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.sticker-board-pin {
+  position: absolute;
+  font-size: 22px;
+  z-index: 5;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.2));
+  pointer-events: none;
+}
+.sticker-board-pin-tl { top: 12px; left: 16px; transform: rotate(-15deg); }
+.sticker-board-pin-tr { top: 12px; right: 16px; transform: rotate(20deg); }
+.sticker-board-pin-bl { bottom: 12px; left: 16px; transform: rotate(10deg); }
+.sticker-board-pin-br { bottom: 12px; right: 16px; transform: rotate(-25deg); }
+
+.album-sticker-item {
+  position: relative;
+  background: var(--bg, #FFFFFF);
+  border: 4px solid #FFFFFF;
+  border-radius: 20px;
+  padding: 12px 18px;
+  box-shadow: 0 8px 22px rgba(38, 49, 38, 0.12), 0 2px 6px rgba(0,0,0,0.06);
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transform: rotate(var(--rot, 0deg));
+}
+.album-sticker-item:hover {
+  transform: translateY(-10px) scale(1.08) rotate(0deg) !important;
+  box-shadow: 0 18px 38px rgba(244, 123, 32, 0.28), 0 6px 14px rgba(0,0,0,0.12);
+  z-index: 50;
+}
+.album-sticker-item:active {
+  cursor: grabbing;
+}
+.album-sticker-item.hidden-by-filter {
+  opacity: 0;
+  transform: scale(0.8) !important;
+  pointer-events: none;
+  display: none !important;
+}
+
+.sticker-tape-mark {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.stamp-style {
+  border: 3px dashed #1565C0;
+  border-radius: 12px;
+  background: #E3F2FD;
+}
+.badge-style {
+  border-radius: 999px;
+  border-color: #FBC02D;
+}
+
+.sticker-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.sticker-text-wrap strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+.sticker-text-wrap span {
+  font-size: 12px;
+  color: var(--text-sec);
+  display: block;
+  margin-top: 2px;
+}
+
+.sticker-sparkle {
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+}
+.album-sticker-item:hover .sticker-sparkle {
+  opacity: 1;
+  transform: scale(1.3) rotate(15deg);
+}
+
+.sticker-tip-note {
+  font-size: var(--text-sm);
+  color: var(--orange-dark);
+  background: var(--orange-light);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* Sticker Memory Modal Specifics */
+.sticker-modal-card {
+  border: 4px solid var(--cream-dark);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFFBF2 100%);
+}
+.sticker-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border);
+}
+.sticker-modal-icon-badge {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: var(--orange-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: var(--shadow-sm);
+}
+.sticker-modal-quote {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-style: italic;
+  color: var(--text-dark);
+  line-height: 1.6;
+  background: var(--cream);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--orange);
+  margin-bottom: 24px;
+}
+.sticker-modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+@media (max-width:768px) {
+  .hero-sticker { transform: scale(0.85) !important; }
+  .hero-sticker-cassette { top: -10px; right: -10px; }
+  .hero-sticker-polaroid { bottom: 10px; left: -10px; }
+  .hero-sticker-stamp { display: none; }
+  .sticker-board { padding: 28px 16px; min-height: 420px; }
+}
+
+
+
+
+
+
+

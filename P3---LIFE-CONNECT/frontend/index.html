@@ -165,9 +165,9 @@
           </div>
         </div>
 
-        <div class="hero__image-wrap animate-on-scroll" aria-hidden="true">
+        <div class="hero__image-wrap animate-on-scroll" aria-hidden="true" style="overflow:visible;">
           <div
-            style="width:100%;height:100%;background:linear-gradient(135deg, #DCE8C8 0%, #EEF5E4 40%, #FFE0B2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px;">
+            style="width:100%;height:100%;background:linear-gradient(135deg, #DCE8C8 0%, #EEF5E4 40%, #FFE0B2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px;border-radius:var(--radius-xl);overflow:hidden;position:relative;">
             <div style="font-size:80px;">👨‍👩‍👧‍👦</div>
             <div style="text-align:center;">
               <div
@@ -181,6 +181,38 @@
               <span class="badge badge-cream">Memory Vault</span>
             </div>
           </div>
+
+          <!-- Hero Floating Nostalgic Stickers -->
+          <div class="hero-sticker hero-sticker-cassette floating-sticker" style="--rot:6deg;" data-title="Mix Tape '82"
+            data-icon="📼" data-sound="tape"
+            data-memory="Remember using a HB pencil to manually wind back loose magnetic cassette tape?">
+            <span class="hero-sticker__icon">📼</span>
+            <div class="hero-sticker__text">
+              <strong>Mix Tape '82</strong>
+              <span>Golden Hits</span>
+            </div>
+          </div>
+
+          <div class="hero-sticker hero-sticker-polaroid floating-sticker" style="--rot:-8deg;"
+            data-title="Summer of '79" data-icon="📸" data-sound="pop"
+            data-memory="Shaking a Polaroid picture and watching the colorful memories appear magic-like in your hands!">
+            <span class="hero-sticker__icon">📸</span>
+            <div class="hero-sticker__text">
+              <strong>School Reunion</strong>
+              <span>Summer '79</span>
+            </div>
+          </div>
+
+          <div class="hero-sticker hero-sticker-stamp floating-sticker" style="--rot:-4deg;"
+            data-title="Airmail Post 1975" data-icon="📮" data-sound="pop"
+            data-memory="The unforgettable excitement of receiving blue-bordered Airmail letters from old friends across long distances.">
+            <span class="hero-sticker__icon">📮</span>
+            <div class="hero-sticker__text">
+              <strong>POST 1975</strong>
+              <span>Airmail Letter</span>
+            </div>
+          </div>
+
           <div class="hero__image-badge">
             <div class="hero__image-badge-icon">🤝</div>
             <div class="hero__image-badge-text">
@@ -254,6 +286,202 @@
                 <button class="btn btn-ghost btn-sm" tabindex="-1" aria-hidden="true">Explore →</button>
               </div>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOSTALGIC STICKERS ALBUM SECTION -->
+      <section class="section sticker-album-section" id="nostalgia-stickers" aria-labelledby="stickers-title">
+        <div class="container">
+          <div class="text-center mb-5">
+            <div class="section-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              Interactive Nostalgia Album
+            </div>
+            <h2 class="section-title" id="stickers-title">Peel, Drag & Relive <span>Golden Memories</span></h2>
+            <p class="section-body" style="margin:0 auto 24px;max-width:640px;">
+              Click any nostalgic sticker to pop open a cherished memory, hear a classic sound, or drag stickers around
+              to personalize your memory board.
+            </p>
+
+            <!-- Category Filter Tabs & Actions -->
+            <div class="sticker-controls">
+              <div class="sticker-filter-chips">
+                <button class="chip active" data-sticker-filter="all" onclick="filterStickers('all', this)">All
+                  Stickers</button>
+                <button class="chip" data-sticker-filter="music" onclick="filterStickers('music', this)">📼 Tunes &
+                  Songs</button>
+                <button class="chip" data-sticker-filter="childhood" onclick="filterStickers('childhood', this)">📻 Good
+                  Old Days</button>
+                <button class="chip" data-sticker-filter="letters" onclick="filterStickers('letters', this)">📮 Post &
+                  Letters</button>
+                <button class="chip" data-sticker-filter="badges" onclick="filterStickers('badges', this)">🏆 Vintage
+                  Badges</button>
+              </div>
+
+              <div class="sticker-action-btns">
+                <button class="btn btn-secondary btn-sm" onclick="stampRandomSticker()">
+                  <span>✨</span> Stamp New Memory
+                </button>
+                <button class="btn btn-ghost btn-sm" onclick="resetStickerBoard()">
+                  <span>🔄</span> Reset Board
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Corkboard Canvas -->
+          <div class="sticker-board" id="sticker-board">
+            <div class="sticker-board-pin sticker-board-pin-tl">📌</div>
+            <div class="sticker-board-pin sticker-board-pin-tr">📌</div>
+            <div class="sticker-board-pin sticker-board-pin-bl">📌</div>
+            <div class="sticker-board-pin sticker-board-pin-br">📌</div>
+
+            <!-- Sticker 1: Cassette -->
+            <div class="album-sticker-item" data-category="music" data-title="Mix Tape '78" data-icon="📼"
+              data-sound="tape"
+              data-memory="Remember using an HB lead pencil to manually wind back loose magnetic tape inside a cassette?"
+              style="--rot:-4deg; --bg:#FFF3E0; --border-color:#F47B20;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#FFE0B2;color:#D9651A;">📼</div>
+              <div class="sticker-text-wrap">
+                <strong>Mix Tape '78</strong>
+                <span>Evergreen Retro Hits</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 2: Polaroid -->
+            <div class="album-sticker-item" data-category="childhood" data-title="School Reunion '84" data-icon="📸"
+              data-sound="pop"
+              data-memory="Shaking a fresh Polaroid photograph and watching the black film turn into colorful smiles right in your hands."
+              style="--rot:5deg; --bg:#FFFFFF; --border-color:#405C32;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#EEF5E4;color:#405C32;">📸</div>
+              <div class="sticker-text-wrap">
+                <strong>Summer of '84</strong>
+                <span>School Friends Reunion</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 3: Valve Radio -->
+            <div class="album-sticker-item" data-category="childhood" data-title="Binaca Radio Hours" data-icon="📻"
+              data-sound="chime"
+              data-memory="Every Sunday morning, families gathered around the wood-finished Murphy radio for Binaca Geetmala."
+              style="--rot:-6deg; --bg:#FFF8E8; --border-color:#D9651A;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#FEF0CC;color:#D9651A;">📻</div>
+              <div class="sticker-text-wrap">
+                <strong>Sunday Radio</strong>
+                <span>Dialing the Shortwave</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 4: Airmail Stamp -->
+            <div class="album-sticker-item stamp-style" data-category="letters" data-title="Air Mail 1975"
+              data-icon="📮" data-sound="pop"
+              data-memory="Receiving light-blue Airmail envelopes with red & blue diagonal border stripes from distant childhood friends."
+              style="--rot:3deg; --bg:#E3F2FD; --border-color:#1976D2;">
+              <div class="sticker-icon-wrap" style="background:#BBDEFB;color:#1565C0;">📮</div>
+              <div class="sticker-text-wrap">
+                <strong>Air Mail Stamp</strong>
+                <span>Postmarked 1975</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 5: Rotary Telephone -->
+            <div class="album-sticker-item" data-category="letters" data-title="Rotary Phone 90s" data-icon="🕿"
+              data-sound="chime"
+              data-memory="Spinning the heavy rotary wheel to dial a best friend's landline phone number memorized by heart."
+              style="--rot:-3deg; --bg:#E8F5E9; --border-color:#2E7D32;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#C8E6C9;color:#2E7D32;">🕿</div>
+              <div class="sticker-text-wrap">
+                <strong>Trunk Call 🕿</strong>
+                <span>Ring Ring! Old Friends</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 6: Vinyl Record -->
+            <div class="album-sticker-item" data-category="music" data-title="33⅓ RPM Vinyl" data-icon="💿"
+              data-sound="tape"
+              data-memory="Placing the tone arm needle gently on a black vinyl record and hearing that cozy warm crackle before the song started."
+              style="--rot:6deg; --bg:#F3E5F5; --border-color:#7B1FA2;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#E1BEE7;color:#7B1FA2;">💿</div>
+              <div class="sticker-text-wrap">
+                <strong>33⅓ RPM Vinyl</strong>
+                <span>Golden Era LP</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 7: Wax Letter Postcard -->
+            <div class="album-sticker-item" data-category="letters" data-title="Inland Love Letter" data-icon="✉️"
+              data-sound="pop"
+              data-memory="Carefully folding the light blue Inland Letter form, licking the adhesive border, and walking to the red post box."
+              style="--rot:-5deg; --bg:#FFF3E0; --border-color:#E65100;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#FFE0B2;color:#E65100;">✉️</div>
+              <div class="sticker-text-wrap">
+                <strong>Inland Letter</strong>
+                <span>With Wax Seal Stamp</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 8: 90s Pixel Heart Arcade -->
+            <div class="album-sticker-item" data-category="badges" data-title="90s Arcade Nostalgia" data-icon="🎮"
+              data-sound="chime"
+              data-memory="Blowing into video game cartridges to make Super Mario & Contra load on weekend mornings!"
+              style="--rot:4deg; --bg:#FCE4EC; --border-color:#C2185B;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#F8BBD0;color:#C2185B;">🎮</div>
+              <div class="sticker-text-wrap">
+                <strong>90s Arcade Heart</strong>
+                <span>Video Game Memories</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 9: Certified Nostalgic Gold Rosette -->
+            <div class="album-sticker-item badge-style" data-category="badges" data-title="Certified Nostalgic"
+              data-icon="🏆" data-sound="chime"
+              data-memory="Awarded for cherishing life's greatest gift: enduring friendships and timeless memories."
+              style="--rot:-2deg; --bg:#FFFDE7; --border-color:#FBC02D;">
+              <div class="sticker-icon-wrap" style="background:#FFF59D;color:#F57F17;">🏆</div>
+              <div class="sticker-text-wrap">
+                <strong>Certified Nostalgic</strong>
+                <span>LifeConnect Memory Ribbon</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+
+            <!-- Sticker 10: Sunday Chai & Newspaper -->
+            <div class="album-sticker-item" data-category="childhood" data-title="Morning Chai & Paper" data-icon="☕"
+              data-sound="pop"
+              data-memory="The peaceful morning aroma of hot spiced cardamom tea while browsing the morning gazette on the sunny balcony."
+              style="--rot:5deg; --bg:#EFEBE9; --border-color:#5D4037;">
+              <div class="sticker-tape-mark"></div>
+              <div class="sticker-icon-wrap" style="background:#D7CCC8;color:#5D4037;">☕</div>
+              <div class="sticker-text-wrap">
+                <strong>Chai & Newspaper</strong>
+                <span>Slow Sunday Morning</span>
+              </div>
+              <span class="sticker-sparkle">✨</span>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <span class="sticker-tip-note">💡 Tip: Drag stickers anywhere inside the album or click to pop open the
+              memory card!</span>
           </div>
         </div>
       </section>
@@ -1657,6 +1885,34 @@
       <div style="display:flex;gap:12px;">
         <button class="btn btn-secondary flex-1" onclick="closeAddMemoryModal()">Cancel</button>
         <button class="btn btn-primary flex-1" onclick="saveNewMemory()">Save Memory</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticker Memory Modal -->
+  <div id="sticker-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="sticker-modal-title">
+    <div class="modal sticker-modal-card">
+      <button class="modal-close" onclick="closeStickerModal()" aria-label="Close memory modal">✕</button>
+      <div class="sticker-modal-header">
+        <div id="sticker-modal-icon" class="sticker-modal-icon-badge">📼</div>
+        <div>
+          <span class="badge badge-orange mb-1">Nostalgic Memory Flash</span>
+          <h3 id="sticker-modal-title" class="modal-title" style="margin-bottom:0;">Mix Tape '78</h3>
+        </div>
+      </div>
+      <div class="sticker-modal-body">
+        <p id="sticker-modal-text" class="sticker-modal-quote">
+          "Remember waiting by the radio with a cassette recorder ready to record your favorite song?"
+        </p>
+      </div>
+      <div class="sticker-modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeStickerModal()">Keep Browsing</button>
+        <button class="btn btn-primary btn-sm" onclick="closeStickerModal(); navigate('memories');">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+          Relive Era Memories
+        </button>
       </div>
     </div>
   </div>

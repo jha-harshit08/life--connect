@@ -1586,9 +1586,261 @@ function initApp() {
       if (action === 'fine')   showToast('That\'s wonderful! Have a beautiful day!', 'success');
     });
   });
+
+  // Nostalgic Stickers System
+  initNostalgicStickers();
 }
 
 // ----------------------------------------------------------------
-// 27. START
+// 27. NOSTALGIC STICKER INTERACTION SYSTEM
+// ----------------------------------------------------------------
+
+/** Synthesizes pleasant retro audio effects using Web Audio API */
+function playStickerSound(type = 'pop') {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+
+    if (type === 'tape') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(520, now + 0.12);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } else if (type === 'chime') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.setValueAtTime(659.25, now + 0.08);
+      osc.frequency.setValueAtTime(783.99, now + 0.16);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } else {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(740, now + 0.08);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }
+  } catch (err) {
+    // Ignore audio context errors
+  }
+}
+
+/** Shows nostalgic memory modal */
+function showStickerMemoryModal(title, memoryText, icon) {
+  const modal = document.getElementById('sticker-modal');
+  const titleEl = document.getElementById('sticker-modal-title');
+  const textEl = document.getElementById('sticker-modal-text');
+  const iconEl = document.getElementById('sticker-modal-icon');
+
+  if (titleEl) titleEl.textContent = title || 'Nostalgic Memory';
+  if (textEl) textEl.textContent = `"${memoryText || 'A cherished golden memory from the past.'}"`;
+  if (iconEl) iconEl.textContent = icon || '📼';
+
+  if (modal) modal.classList.add('open');
+}
+
+/** Closes sticker memory modal */
+function closeStickerModal() {
+  const modal = document.getElementById('sticker-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+/** Filters stickers on the album board by category */
+function filterStickers(category, btnEl) {
+  const chips = document.querySelectorAll('.sticker-filter-chips .chip');
+  chips.forEach(c => c.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const stickers = document.querySelectorAll('#sticker-board .album-sticker-item');
+  stickers.forEach(sticker => {
+    const cat = sticker.dataset.category;
+    if (category === 'all' || cat === category) {
+      sticker.classList.remove('hidden-by-filter');
+    } else {
+      sticker.classList.add('hidden-by-filter');
+    }
+  });
+
+  playStickerSound('pop');
+}
+
+/** Dynamic extra nostalgic stickers pool */
+const EXTRA_STICKERS_POOL = [
+  { title: "Marbles & Tops", icon: "🔴", sound: "pop", cat: "childhood", memory: "Playing Gulli Danda and colorful Glass Marbles (Kanchas) in the lane after school.", bg: "#FFF8E8", textBg: "#FFE0B2", color: "#D9651A" },
+  { title: "Comics & Nandan", icon: "📚", sound: "chime", cat: "childhood", memory: "Waiting for monthly comic books like Chacha Chaudhary, Suppandi and Nandan magazines.", bg: "#F3E5F5", textBg: "#E1BEE7", color: "#7B1FA2" },
+  { title: "Fountain Pen", icon: "🖊️", sound: "pop", cat: "letters", memory: "Filling blue Chelpark ink into a classic Hero fountain pen and practicing cursive calligraphy.", bg: "#E3F2FD", textBg: "#BBDEFB", color: "#1565C0" },
+  { title: "Phonograph LP", icon: "🎵", sound: "tape", cat: "music", memory: "Spinning classic 45 RPM vinyl singles on a portable record player at family celebrations.", bg: "#E8F5E9", textBg: "#C8E6C9", color: "#2E7D32" },
+  { title: "Gold Star Badge", icon: "⭐", sound: "chime", cat: "badges", memory: "Receiving shiny star stickers on school notebooks for neat homework!", bg: "#FFFDE7", textBg: "#FFF59D", color: "#F57F17" }
+];
+
+let extraStickerIndex = 0;
+
+/** Stamps a new random sticker into the corkboard */
+function stampRandomSticker() {
+  const board = document.getElementById('sticker-board');
+  if (!board) return;
+
+  const data = EXTRA_STICKERS_POOL[extraStickerIndex % EXTRA_STICKERS_POOL.length];
+  extraStickerIndex++;
+
+  const rot = (Math.random() * 14 - 7).toFixed(1);
+  const newItem = document.createElement('div');
+  newItem.className = 'album-sticker-item';
+  newItem.dataset.category = data.cat;
+  newItem.dataset.title = data.title;
+  newItem.dataset.icon = data.icon;
+  newItem.dataset.sound = data.sound;
+  newItem.dataset.memory = data.memory;
+  newItem.style.cssText = `--rot:${rot}deg; --bg:${data.bg};`;
+
+  newItem.innerHTML = `
+    <div class="sticker-tape-mark"></div>
+    <div class="sticker-icon-wrap" style="background:${data.textBg};color:${data.color};">${data.icon}</div>
+    <div class="sticker-text-wrap">
+      <strong>${data.title}</strong>
+      <span>Stamped Memory ✨</span>
+    </div>
+    <span class="sticker-sparkle">✨</span>
+  `;
+
+  board.appendChild(newItem);
+  attachStickerEvents(newItem);
+  playStickerSound(data.sound);
+  showToast(`Stamped new sticker: ${data.title}!`, 'success');
+}
+
+/** Resets sticker positions and filters */
+function resetStickerBoard() {
+  const board = document.getElementById('sticker-board');
+  if (!board) return;
+
+  const firstChip = document.querySelector('.sticker-filter-chips .chip');
+  if (firstChip) filterStickers('all', firstChip);
+
+  const items = board.querySelectorAll('.album-sticker-item');
+  items.forEach(item => {
+    item.style.position = '';
+    item.style.left = '';
+    item.style.top = '';
+    item.style.zIndex = '';
+  });
+
+  playStickerSound('chime');
+  showToast('Sticker board reset to initial layout.', 'info');
+}
+
+/** Attaches drag & drop and click events to a single sticker */
+function attachStickerEvents(sticker) {
+  sticker.addEventListener('click', (e) => {
+    if (sticker.dataset.wasDragged === 'true') {
+      sticker.dataset.wasDragged = 'false';
+      return;
+    }
+
+    const sound = sticker.dataset.sound || 'pop';
+    playStickerSound(sound);
+
+    const title = sticker.dataset.title;
+    const memory = sticker.dataset.memory;
+    const icon = sticker.dataset.icon;
+
+    if (memory) {
+      showStickerMemoryModal(title, memory, icon);
+    }
+  });
+
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+
+  function startDrag(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    isDragging = true;
+    sticker.dataset.wasDragged = 'false';
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    startX = clientX;
+    startY = clientY;
+
+    const board = sticker.closest('.sticker-board') || sticker.offsetParent || document.body;
+    const boardRect = board.getBoundingClientRect();
+    const rect = sticker.getBoundingClientRect();
+
+    initialLeft = rect.left - boardRect.left;
+    initialTop = rect.top - boardRect.top;
+
+    sticker.style.position = 'absolute';
+    sticker.style.left = `${initialLeft}px`;
+    sticker.style.top = `${initialTop}px`;
+    sticker.style.zIndex = '100';
+
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('touchmove', onDrag, { passive: false });
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+
+  function onDrag(e) {
+    if (!isDragging) return;
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+      sticker.dataset.wasDragged = 'true';
+    }
+
+    sticker.style.left = `${initialLeft + dx}px`;
+    sticker.style.top = `${initialTop + dy}px`;
+
+    if (e.cancelable) e.preventDefault();
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('touchmove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchend', stopDrag);
+  }
+
+  sticker.addEventListener('mousedown', startDrag);
+  sticker.addEventListener('touchstart', startDrag, { passive: true });
+}
+
+/** Initializes all interactive nostalgic stickers */
+function initNostalgicStickers() {
+  const stickers = document.querySelectorAll('.album-sticker-item, .hero-sticker');
+  stickers.forEach(sticker => attachStickerEvents(sticker));
+
+  const stickerModal = document.getElementById('sticker-modal');
+  if (stickerModal) {
+    stickerModal.addEventListener('click', (e) => {
+      if (e.target === stickerModal) closeStickerModal();
+    });
+  }
+}
+
+// ----------------------------------------------------------------
+// 28. START
 // ----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', initApp);
+
