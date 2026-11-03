@@ -1,0 +1,14 @@
+[project]
+name = "life-connect"
+version = "1.0.0"
+description = "LifeConnect — AI-powered life companion for people 50+"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.29.0",
+    "pydantic[email]>=2.0.0",
+    "python-multipart>=0.0.9",
+]
+
+[tool.vercel]
+entrypoint = "backend.main:app"

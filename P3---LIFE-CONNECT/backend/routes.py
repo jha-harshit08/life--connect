@@ -11,7 +11,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 
-from database import get_connection
+try:
+    from database import get_connection
+except ImportError:
+    from backend.database import get_connection
 
 router = APIRouter(prefix="/api")
 

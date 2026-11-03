@@ -5,16 +5,35 @@ Handles SQLite database initialization and async connection management.
 
 import sqlite3
 import os
+import shutil
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "lifeconnect.db")
+LOCAL_DB_PATH = os.path.join(os.path.dirname(__file__), "lifeconnect.db")
+
+# In Vercel serverless environment, the source filesystem is read-only.
+# Copy database to /tmp so SQLite can perform WAL and write operations without errors.
+if os.environ.get("VERCEL"):
+    DB_PATH = "/tmp/lifeconnect.db"
+    if not os.path.exists(DB_PATH) and os.path.exists(LOCAL_DB_PATH):
+        try:
+            shutil.copyfile(LOCAL_DB_PATH, DB_PATH)
+        except Exception as e:
+            print(f"[LifeConnect] Warning: Could not copy bundled DB to /tmp: {e}")
+else:
+    DB_PATH = LOCAL_DB_PATH
 
 
 def get_connection() -> sqlite3.Connection:
     """Return a synchronous SQLite connection with row factory enabled."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+    except Exception:
+        pass
+    try:
+        conn.execute("PRAGMA foreign_keys=ON")
+    except Exception:
+        pass
     return conn
 
 
